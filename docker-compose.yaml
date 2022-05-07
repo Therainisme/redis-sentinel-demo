@@ -3,11 +3,7 @@ services:
   master:
     container_name: redis-master-6379
     image: redis
-    restart: always
     privileged: true
-    ports:
-      - 6379:6379
-    network_mode: host
     volumes:
       - ./conf/:/conf/
     command: ["redis-server", "/conf/redis-6379.conf"]
@@ -15,60 +11,55 @@ services:
   slave-1:
     container_name: redis-slave-6380
     image: redis
-    restart: always
     privileged: true
-    ports:
-      - 6380:6380
-    network_mode: host
+    network_mode: "container:redis-master-6379"
     volumes:
       - ./conf/:/conf/
     command: ["redis-server", "/conf/redis-6380.conf"]
+    depends_on: 
+      - master
 
   slave-2:
     container_name: redis-slave-6381
     image: redis
-    restart: always
     privileged: true
-    ports:
-      - 6381:6381
-    network_mode: host
+    network_mode: "container:redis-master-6379"
     volumes:
       - ./conf/:/conf/
     command: ["redis-server", "/conf/redis-6381.conf"]
+    depends_on: 
+      - master
 
 
   sentinel-1:
     container_name: redis-sentinel-26379
     image: redis
-    restart: always
     privileged: true
-    ports:
-      - 26379:26379
-    network_mode: host
+    network_mode: "container:redis-master-6379"
     volumes:
       - ./conf/:/conf/
     command: ["redis-sentinel", "/conf/sentinel-26379.conf"]
+    depends_on: 
+      - master
 
   sentinel-2:
     container_name: redis-sentinel-26380
     image: redis
-    restart: always
     privileged: true
-    ports:
-      - 26380:26380
-    network_mode: host
+    network_mode: "container:redis-master-6379"
     volumes:
       - ./conf/:/conf/
     command: ["redis-sentinel", "/conf/sentinel-26380.conf"]
+    depends_on: 
+      - master
 
   sentinel-3:
     container_name: redis-sentinel-26381
     image: redis
-    restart: always
     privileged: true
-    ports:
-      - 26381:26381
-    network_mode: host
+    network_mode: "container:redis-master-6379"
     volumes:
       - ./conf/:/conf/
     command: ["redis-sentinel", "/conf/sentinel-26381.conf"]
+    depends_on: 
+      - master
